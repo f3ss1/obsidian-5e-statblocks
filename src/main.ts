@@ -383,6 +383,17 @@ export default class StatBlockPlugin extends Plugin {
                     text = `1d20+${mult * Number(number)}`;
                     original = str;
                 }
+            } else if (/[\+\-]\d+ к попаданию/.test(str.trim())) {
+                let [, sign, number] = str.match(/([\+\-])(\d+)/) ?? [];
+
+                let mult = 1;
+                if (sign === "-") {
+                    mult = -1;
+                }
+                if (!isNaN(Number(number))) {
+                    text = `1d20+${mult * Number(number)}`;
+                    original = str;
+                }    
             } else if (/\d+\s\(\d+d\d+(?:\s*[+\-]\s*\d+)?\)/.test(str.trim())) {
                 let [, base, dice] =
                     str.match(/(\d+)\s\((\d+d\d+(?:\s*[+\-]\s*\d+)?)\)/) ?? [];
@@ -397,6 +408,7 @@ export default class StatBlockPlugin extends Plugin {
             return (
                 /\w+ [\+\-]\d+/.test(str.trim()) ||
                 /[\+\-]\d+ to hit/.test(str.trim()) ||
+                /[\+\-]\d+ к попаданию/.test(str.trim()) ||
                 /\d+\s\(\d+d\d+(?:\s*[+\-]\s*\d+)?\)/.test(str.trim())
             );
         };
